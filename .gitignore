@@ -1,0 +1,33 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+/src/test/App.test.js
+
+# development
+/src/test/App.test.js
+/src/components/DataList.jsx
+/src/reducers/reducer.js
+/src/actions/actions.js
+/src/styles/App.css
+/src/styles/index.css
+/README_DEP.md
+
+
+# production
+/build
+/target
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
