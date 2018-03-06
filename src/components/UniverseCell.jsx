@@ -26,9 +26,7 @@ class UniverseCell extends React.Component {
         className="universe-cell"
         style={this.props.universeData.universeCellStatuses[this.props.id] ? this.livingStyle : this.deadStyle}
         onClick={() => this.handleClick()}
-      >
-        { /* TODO */ }
-      </button>
+      />
     );
   }
 }

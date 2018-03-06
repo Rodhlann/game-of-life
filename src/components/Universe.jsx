@@ -26,6 +26,7 @@ class Universe extends React.Component {
 
   handleClick() {
     this.props.actions.toggleActive(!this.props.universeData.universeActive);
+    this.gameOfLife();
   }
 
   handleWidthChange(event) {
@@ -38,6 +39,43 @@ class Universe extends React.Component {
     if (event.key === 'Enter') {
       this.props.actions.updateUniverseHeight(this.props.universeData.width, event.target.value);
     }
+  }
+
+  // calculateNeighbors() {
+  //  TODO: likely need to create a 2D array to properly calculate this...
+  //        will refactor code as appropriate after the matrix gets figured out
+  // }
+
+  /*
+    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+    Any live cell with two or three live neighbours lives on to the next generation.
+    Any live cell with more than three live neighbours dies, as if by overpopulation.
+    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+  */
+  calculateStatuses() {
+    const cellStatuses = this.props.universeData.universeCellStatuses;
+    cellStatuses.forEach((status, cellId) => {
+      const neighbors = Math.floor((Math.random() * 10) + 1);
+
+      switch (true) {
+        case (status && neighbors < 2):
+        case (status && neighbors > 3):
+        case (!status && neighbors === 3):
+          this.props.actions.toggleStatus(cellId, cellStatuses);
+          break;
+        default:
+          // live
+      }
+    });
+  }
+
+  gameOfLife() {
+    setTimeout(() => {
+      if (this.props.universeData.universeActive) {
+        this.calculateStatuses();
+        this.gameOfLife();
+      }
+    }, 500);
   }
 
   render() {
