@@ -6,46 +6,38 @@ import * as actions from '../actions/universeActions';
 import { getUniverseData } from '../reducers/universeReducer';
 
 class UniverseCell extends React.Component {
-  livingStyle = { 
+  livingStyle = {
     backgroundColor: 'black',
   }
 
-  deadStyle = { 
+  deadStyle = {
     backgroundColor: 'white',
   }
 
-  handleClick() { 
-    if (!this.props.universeData.universeActive) { 
-      console.log("woah"); // TODO: implement manual status change logic 
-      // this.actions.toggleLife(id);
+  handleClick() {
+    if (!this.props.universeData.universeActive) {
+      this.props.actions.toggleStatus(this.props.id, this.props.universeData.universeCellStatuses);
     }
-  }
-
-  determineStatus() { 
-    // TODO: Determine if cell is living or dead based on 8 surrounding cell statuses
-    //       - Research existing algorithms for this logic
   }
 
   render() {
     return (
-      <div
-        className='universe-cell'
-        style={ this.props.alive ? this.livingStyle : this.deadStyle }
-        onClick={ () => this.handleClick() }
-      />
+      <button
+        className="universe-cell"
+        style={this.props.universeData.universeCellStatuses[this.props.id] ? this.livingStyle : this.deadStyle}
+        onClick={() => this.handleClick()}
+      >
+        { /* TODO */ }
+      </button>
     );
   }
 }
 
 UniverseCell.propTypes = {
   actions: PropTypes.object.isRequired,
+  id: PropTypes.number.isRequired,
   universeData: PropTypes.object.isRequired,
-  alive: PropTypes.bool.isRequired,
 };
-
-UniverseCell.defaultProps = {
-  alive: true,
-}
 
 function mapStateToProps(state) {
   return {

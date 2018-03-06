@@ -9,32 +9,64 @@ import { getUniverseData } from '../reducers/universeReducer';
 import '../styles/universe.css';
 
 class Universe extends React.Component {
-  componentWillMount() {
-    this.props.actions.discoverUniverse(
-      3, // TODO: Fix when user input is added
-      3, // TODO: Fix when user input is added
+  componentDidMount() {
+    this.props.actions.addUniverseCellStatuses(
+      this.props.universeData.width,
+      this.props.universeData.height,
     );
   }
 
   createUniverseRows() {
     const universeRows = [];
     for (let i = 0; i < this.props.universeData.height; i += 1) {
-      universeRows.push(<UniverseRow key={uuid.v4()} />);
+      universeRows.push(<UniverseRow iteration={i} key={uuid.v4()} />);
     }
     return universeRows;
   }
 
-  handleClick() { 
+  handleClick() {
     this.props.actions.toggleActive(!this.props.universeData.universeActive);
+  }
+
+  handleWidthChange(event) {
+    if (event.key === 'Enter') {
+      this.props.actions.updateUniverseWidth(event.target.value, this.props.universeData.height);
+    }
+  }
+
+  handleHeightChange(event) {
+    if (event.key === 'Enter') {
+      this.props.actions.updateUniverseHeight(this.props.universeData.width, event.target.value);
+    }
   }
 
   render() {
     return (
       <div>
-        <div className='actions'>
-          <button onClick={ () => this.handleClick() }>{ this.props.universeData.universeActive ? 'Stop' : 'Start' }</button>
+        <div className="actions">
+          <label htmlFor="width">Width:
+            <input
+              id="width"
+              type="text"
+              defaultValue={this.props.universeData.width}
+              disabled={this.props.universeData.universeActive}
+              onKeyDown={event => this.handleWidthChange(event)}
+            />
+          </label><br />
+          <label htmlFor="height">Height:
+            <input
+              id="height"
+              type="text"
+              defaultValue={this.props.universeData.height}
+              disabled={this.props.universeData.universeActive}
+              onKeyDown={event => this.handleHeightChange(event)}
+            />
+          </label><br />
+          <button onClick={() => this.handleClick()}>
+            {this.props.universeData.universeActive ? 'Stop' : 'Start'}
+          </button>
         </div>
-        <div className='universe'>
+        <div className="universe">
           {this.createUniverseRows()}
         </div>
       </div>

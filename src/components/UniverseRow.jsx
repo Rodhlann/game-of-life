@@ -8,18 +8,20 @@ import { getUniverseData } from '../reducers/universeReducer';
 import UniverseCell from '../components/UniverseCell';
 
 class UniverseRow extends React.Component {
-  createUniverseCells() { 
+  createUniverseCells() {
     const universeCells = [];
-    // TODO: Determine how to properly gather cell instances for status check algorithm 
     for (let i = 0; i < this.props.universeData.width; i += 1) {
-      universeCells.push(<UniverseCell key={ uuid.v4() } />);
+      universeCells.push(<UniverseCell
+        id={(this.props.iteration * this.props.universeData.width) + i} // Sets id to match index of universeCellStatuses array
+        key={uuid.v4()}
+      />);
     }
     return universeCells;
   }
 
   render() {
     return (
-      <div className='universe-row'>
+      <div className="universe-row">
         { this.createUniverseCells() }
       </div>
     );
@@ -27,7 +29,8 @@ class UniverseRow extends React.Component {
 }
 
 UniverseRow.propTypes = {
-  actions: PropTypes.object.isRequired,
+  // actions: PropTypes.object.isRequired,
+  iteration: PropTypes.number.isRequired,
   universeData: PropTypes.object.isRequired,
 };
 
