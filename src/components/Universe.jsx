@@ -53,10 +53,60 @@ class Universe extends React.Component {
     }
   }
 
-  // calculateNeighbors() {
-  //  TODO: likely need to create a 2D array to properly calculate this...
-  //        will refactor code as appropriate after the matrix gets figured out
-  // }
+  wrapToTopChecker(rowIndex) {
+    let tmpRowIndex = rowIndex + 1;
+    if (tmpRowIndex > (this.props.universeData.height - 1)) {
+      tmpRowIndex = 0;
+    }
+    return tmpRowIndex;
+  }
+
+  wrapToBottomChecker(rowIndex) {
+    let tmpRowIndex = rowIndex - 1;
+    if (tmpRowIndex < 0) {
+      tmpRowIndex = this.props.universeData.height - 1;
+    }
+    return tmpRowIndex;
+  }
+
+  wrapToLeftChecker(cellIndex) {
+    let tmpCellIndex = cellIndex + 1;
+    if (tmpCellIndex > (this.props.universeData.width - 1)) {
+      tmpCellIndex = 0;
+    }
+    return tmpCellIndex;
+  }
+
+  wrapToRightChecker(cellIndex) {
+    let tmpCellIndex = cellIndex - 1;
+    if (tmpCellIndex < 0) {
+      tmpCellIndex = this.props.universeData.width - 1;
+    }
+    return tmpCellIndex;
+  }
+
+  calculateNeighbors(cellStatuses, rowIndex, cellIndex) {
+    let actions = this.props.actions;
+    let neighbors = 0;
+    if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // NW
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToBottomChecker(rowIndex)][cellIndex]) { // N
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToLeftChecker(cellIndex)]) { // NE
+      neighbors += 1;
+    } if (cellStatuses[rowIndex][this.wrapToLeftChecker(cellIndex)]) { // E
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][this.wrapToLeftChecker(cellIndex)]) { // SE
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][cellIndex]) { // S
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // SW
+      neighbors += 1;
+    } if (cellStatuses[rowIndex][this.wrapToRightChecker(cellIndex)]) { // W
+      neighbors += 1;
+    }
+    return neighbors;
+  }
 
   /*
     Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
@@ -68,7 +118,7 @@ class Universe extends React.Component {
     const cellStatuses = this.props.universeData.universeCellStatuses;
     cellStatuses.forEach((row, rowIndex) => {
       row.forEach((status, cellIndex) => {
-        const neighbors = Math.floor((Math.random() * 10) + 1);
+        const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
 
         switch (true) {
           case (status && neighbors < 2):

@@ -1,4 +1,4 @@
-###Game of Life Code Challege -- WIP v0.4
+###Game of Life Code Challege -- WIP v0.5
 
 To deploy:
 
@@ -8,13 +8,11 @@ To deploy:
 To play:
 
   - input desired width/height
-  - select desired starting values
+  - select desired starting cells
+    - example patterns can be found at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns
   - press Start button
-    - Currently the "neighbor" value is randomly generated
-    - Will be implementing the calculateNeighbors function soon
-      - ~~Planning on moving to a 2D array, vs what I'm currently working with for this procedure~~
-      - 2D array logic has introduced width/height calculation discrepency, will resolve ASAP
-        - Overall 2D array works well.
+    - while start button is active the width/height inputs and starting cell selection will be disabled
+  - press Stop to alter height/width and cell selection
 
 Notes:
 

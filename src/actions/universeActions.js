@@ -46,7 +46,7 @@ export function updateUniverseWidth(width, height) {
     dispatch({
       type: actionTypes.UPDATE_WIDTH,
       width,
-      universeCellStatuses: [...Array(width).fill(false)].map(() => Array(height).fill(false)),
+      universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
@@ -56,7 +56,7 @@ export function updateUniverseHeight(width, height) {
     dispatch({
       type: actionTypes.UPDATE_HEIGHT,
       height,
-      universeCellStatuses: [...Array(width).fill(false)].map(() => Array(height).fill(false)),
+      universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
@@ -65,7 +65,7 @@ export function addUniverseCellStatuses(width, height) {
   return (dispatch) => {
     dispatch({
       type: actionTypes.ADD_UNIVERSE_CELLS,
-      universeCellStatuses: [...Array(width).fill(false)].map(() => Array(height).fill(false)),
+      universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
