@@ -9,6 +9,10 @@ import { getUniverseData } from '../reducers/universeReducer';
 import '../styles/universe.css';
 
 class Universe extends React.Component {
+  static validateInput(value) {
+    return /^\d+$/.test(value);
+  }
+
   componentDidMount() {
     this.props.actions.addUniverseCellStatuses(
       this.props.universeData.width,
@@ -19,7 +23,7 @@ class Universe extends React.Component {
   createUniverseRows() {
     const universeRows = [];
     for (let i = 0; i < this.props.universeData.height; i += 1) {
-      universeRows.push(<UniverseRow iteration={i} key={uuid.v4()} />);
+      universeRows.push(<UniverseRow rowIndex={i} key={uuid.v4()} />);
     }
     return universeRows;
   }
@@ -31,13 +35,21 @@ class Universe extends React.Component {
 
   handleWidthChange(event) {
     if (event.key === 'Enter') {
-      this.props.actions.updateUniverseWidth(event.target.value, this.props.universeData.height);
+      const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.width;
+      this.props.actions.updateUniverseWidth(
+        Number(value),
+        this.props.universeData.height,
+      );
     }
   }
 
   handleHeightChange(event) {
     if (event.key === 'Enter') {
-      this.props.actions.updateUniverseHeight(this.props.universeData.width, event.target.value);
+      const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.height;
+      this.props.actions.updateUniverseHeight(
+        this.props.universeData.width,
+        Number(value),
+      );
     }
   }
 
@@ -54,18 +66,20 @@ class Universe extends React.Component {
   */
   calculateStatuses() {
     const cellStatuses = this.props.universeData.universeCellStatuses;
-    cellStatuses.forEach((status, cellId) => {
-      const neighbors = Math.floor((Math.random() * 10) + 1);
+    cellStatuses.forEach((row, rowIndex) => {
+      row.forEach((status, cellIndex) => {
+        const neighbors = Math.floor((Math.random() * 10) + 1);
 
-      switch (true) {
-        case (status && neighbors < 2):
-        case (status && neighbors > 3):
-        case (!status && neighbors === 3):
-          this.props.actions.toggleStatus(cellId, cellStatuses);
-          break;
-        default:
+        switch (true) {
+          case (status && neighbors < 2):
+          case (status && neighbors > 3):
+          case (!status && neighbors === 3):
+            this.props.actions.toggleStatus(rowIndex, cellIndex, cellStatuses);
+            break;
+          default:
           // live
-      }
+        }
+      });
     });
   }
 

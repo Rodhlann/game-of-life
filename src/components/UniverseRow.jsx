@@ -12,7 +12,8 @@ class UniverseRow extends React.Component {
     const universeCells = [];
     for (let i = 0; i < this.props.universeData.width; i += 1) {
       universeCells.push(<UniverseCell
-        id={(this.props.iteration * this.props.universeData.width) + i} // Sets id to match index of universeCellStatuses array
+        rowIndex={this.props.rowIndex}
+        cellIndex={i}
         key={uuid.v4()}
       />);
     }
@@ -30,7 +31,7 @@ class UniverseRow extends React.Component {
 
 UniverseRow.propTypes = {
   // actions: PropTypes.object.isRequired,
-  iteration: PropTypes.number.isRequired,
+  rowIndex: PropTypes.number.isRequired,
   universeData: PropTypes.object.isRequired,
 };
 

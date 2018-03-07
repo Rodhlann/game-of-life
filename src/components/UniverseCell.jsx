@@ -16,15 +16,31 @@ class UniverseCell extends React.Component {
 
   handleClick() {
     if (!this.props.universeData.universeActive) {
-      this.props.actions.toggleStatus(this.props.id, this.props.universeData.universeCellStatuses);
+      this.props.actions.toggleStatus(
+        this.props.rowIndex,
+        this.props.cellIndex,
+        this.props.universeData.universeCellStatuses,
+      );
     }
+  }
+
+  checkStyles() {
+    if (
+      this.props.universeData.universeCellStatuses.length &&
+      this.props.universeData.universeCellStatuses[this.props.rowIndex] &&
+      this.props.universeData.universeCellStatuses[this.props.rowIndex][this.props.cellIndex]
+    ) {
+      const status = this.props.universeData.universeCellStatuses[this.props.rowIndex][this.props.cellIndex];
+      return status ? this.livingStyle : this.deadStyle;
+    }
+    return this.deadStyle;
   }
 
   render() {
     return (
       <button
         className="universe-cell"
-        style={this.props.universeData.universeCellStatuses[this.props.id] ? this.livingStyle : this.deadStyle}
+        style={this.checkStyles()}
         onClick={() => this.handleClick()}
       />
     );
@@ -33,7 +49,8 @@ class UniverseCell extends React.Component {
 
 UniverseCell.propTypes = {
   actions: PropTypes.object.isRequired,
-  id: PropTypes.number.isRequired,
+  rowIndex: PropTypes.number.isRequired,
+  cellIndex: PropTypes.number.isRequired,
   universeData: PropTypes.object.isRequired,
 };
 
