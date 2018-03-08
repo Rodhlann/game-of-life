@@ -1,4 +1,4 @@
-###Game of Life Code Challege -- WIP v0.5
+###Game of Life Code Challege -- WIP v1.0
 
 To deploy:
 
@@ -14,10 +14,6 @@ To play:
     - while start button is active the width/height inputs and starting cell selection will be disabled
   - press Stop to alter height/width and cell selection
 
-Notes:
+Notes: 
 
-- Performance:
-    - After creating a grid greater than 10x10 the application becomes noticeably more slow
-    - 20x20 still works, but bumping up to 50x50 appears to crash the browser
-    - Attempted to refactor to Array.forEach function, but this appears to create less consistency than a standard for loop
-    - 2D array refactor does not assist with performance, possibly hurts? 
+  - if yarn install fails due to certificate issues try running this command: npm config set registry http://registry.npmjs.org/ --global
