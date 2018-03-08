@@ -1,0 +1,54 @@
+label {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input:enabled { 
+  border: 1px solid darkslategrey;
+  color: black;
+}
+
+input:disabled { 
+  border: 1px solid lightgrey;
+  color: grey;
+}
+
+button:focus {
+  outline:none;
+}
+
+#width { 
+  margin-left: 10px; 
+}
+
+#height { 
+  margin-left: 4px; 
+}
+
+.universe {
+  flex-direction: row;
+}
+
+.universe-row:after {
+  clear: both;
+  content: "";
+  display: table;
+}
+
+.universe-cell {
+  background: #fff;
+  border: 1px solid #999;
+  float: left;
+  font-size: 24px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 34px;
+  margin-right: -1px;
+  margin-top: -1px;
+  padding: 0;
+  text-align: center;
+  width: 34px;
+}
+
+.actions button { 
+  margin-bottom: 5px;
+}

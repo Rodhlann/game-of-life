@@ -1,40 +1,183 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import uuid from 'uuid';
 import PropTypes from 'prop-types';
-// import UniverseRow from '../components/UniverseRow';
+import UniverseRow from '../components/UniverseRow';
 import * as actions from '../actions/universeActions';
 import { getUniverseData } from '../reducers/universeReducer';
+import '../styles/universe.css';
 
 class Universe extends React.Component {
-  componentWillMount() {
-    this.props.actions.discoverUniverse(
-      3, // TODO: Fix when user input is added
-      8, // TODO: Fix when user input is added
+  static validateInput(value) {
+    return /^\d+$/.test(value);
+  }
+
+  componentDidMount() {
+    this.props.actions.addUniverseCellStatuses(
+      this.props.universeData.width,
+      this.props.universeData.height,
     );
   }
 
   createUniverseRows() {
     const universeRows = [];
     for (let i = 0; i < this.props.universeData.height; i += 1) {
-      // universeRows.push(<UniverseRow />); TODO: Uncomment when UniverseRow is completed
-      universeRows.push(<div>{ 'ROW ' + (i + 1) }</div>);
+      universeRows.push(<UniverseRow rowIndex={i} key={uuid.v4()} />);
     }
     return universeRows;
+  }
+
+  handleClick() {
+    this.props.actions.toggleActive(!this.props.universeData.universeActive);
+    this.gameOfLife();
+  }
+
+  handleWidthChange(event) {
+    if (event.key === 'Enter') {
+      const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.width;
+      this.props.actions.updateUniverseWidth(
+        Number(value),
+        this.props.universeData.height,
+      );
+    }
+  }
+
+  handleHeightChange(event) {
+    if (event.key === 'Enter') {
+      const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.height;
+      this.props.actions.updateUniverseHeight(
+        this.props.universeData.width,
+        Number(value),
+      );
+    }
+  }
+
+  wrapToTopChecker(rowIndex) {
+    let tmpRowIndex = rowIndex + 1;
+    if (tmpRowIndex > (this.props.universeData.height - 1)) {
+      tmpRowIndex = 0;
+    }
+    return tmpRowIndex;
+  }
+
+  wrapToBottomChecker(rowIndex) {
+    let tmpRowIndex = rowIndex - 1;
+    if (tmpRowIndex < 0) {
+      tmpRowIndex = this.props.universeData.height - 1;
+    }
+    return tmpRowIndex;
+  }
+
+  wrapToLeftChecker(cellIndex) {
+    let tmpCellIndex = cellIndex + 1;
+    if (tmpCellIndex > (this.props.universeData.width - 1)) {
+      tmpCellIndex = 0;
+    }
+    return tmpCellIndex;
+  }
+
+  wrapToRightChecker(cellIndex) {
+    let tmpCellIndex = cellIndex - 1;
+    if (tmpCellIndex < 0) {
+      tmpCellIndex = this.props.universeData.width - 1;
+    }
+    return tmpCellIndex;
+  }
+
+  calculateNeighbors(cellStatuses, rowIndex, cellIndex) {
+    let neighbors = 0;
+    if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // NW
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToBottomChecker(rowIndex)][cellIndex]) { // N
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToLeftChecker(cellIndex)]) { // NE
+      neighbors += 1;
+    } if (cellStatuses[rowIndex][this.wrapToLeftChecker(cellIndex)]) { // E
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][this.wrapToLeftChecker(cellIndex)]) { // SE
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][cellIndex]) { // S
+      neighbors += 1;
+    } if (cellStatuses[this.wrapToTopChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // SW
+      neighbors += 1;
+    } if (cellStatuses[rowIndex][this.wrapToRightChecker(cellIndex)]) { // W
+      neighbors += 1;
+    }
+    return neighbors;
+  }
+
+  /*
+    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+    Any live cell with two or three live neighbours lives on to the next generation.
+    Any live cell with more than three live neighbours dies, as if by overpopulation.
+    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+  */
+  calculateStatuses() {
+    const cellStatuses = this.props.universeData.universeCellStatuses;
+    const tmpCellStatuses =
+    [...Array(this.props.universeData.height).fill(false)].map(() => Array(this.props.universeData.width).fill(false));
+    cellStatuses.forEach((row, rowIndex) => {
+      row.forEach((status, cellIndex) => {
+        const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
+        switch (true) {
+          case (status && neighbors < 2):
+          case (status && neighbors > 3):
+          case (!status && neighbors === 3):
+            tmpCellStatuses[rowIndex][cellIndex] = !cellStatuses[rowIndex][cellIndex];
+            break;
+          default:
+            tmpCellStatuses[rowIndex][cellIndex] = !!cellStatuses[rowIndex][cellIndex];
+        }
+      });
+    });
+    this.props.actions.updateAllStatuses(tmpCellStatuses);
+  }
+
+  gameOfLife() {
+    setTimeout(() => {
+      if (this.props.universeData.universeActive) {
+        this.calculateStatuses();
+        this.gameOfLife();
+      }
+    }, 300);
   }
 
   render() {
     return (
       <div>
-        { this.createUniverseRows() }
+        <div className="actions">
+          <label htmlFor="width">Width:
+            <input
+              id="width"
+              type="text"
+              defaultValue={this.props.universeData.width}
+              disabled={this.props.universeData.universeActive}
+              onKeyDown={event => this.handleWidthChange(event)}
+            />
+          </label><br />
+          <label htmlFor="height">Height:
+            <input
+              id="height"
+              type="text"
+              defaultValue={this.props.universeData.height}
+              disabled={this.props.universeData.universeActive}
+              onKeyDown={event => this.handleHeightChange(event)}
+            />
+          </label><br />
+          <button onClick={() => this.handleClick()}>
+            {this.props.universeData.universeActive ? 'Stop' : 'Start'}
+          </button>
+        </div>
+        <div className="universe">
+          {this.createUniverseRows()}
+        </div>
       </div>
     );
   }
 }
 
 Universe.propTypes = {
-  // width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   actions: PropTypes.object.isRequired,
   universeData: PropTypes.object.isRequired,
 };
