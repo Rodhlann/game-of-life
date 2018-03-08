@@ -1,4 +1,4 @@
-###Game of Life Code Challege -- WIP v1.0
+Game of Life Code Challege -- v1.0
 
 To deploy:
 
@@ -16,4 +16,5 @@ To play:
 
 Notes: 
 
-  - if yarn install fails due to certificate issues try running this command: npm config set registry http://registry.npmjs.org/ --global
+  - if yarn install fails due to certificate issues try running this command: 
+    - ```npm config set registry http://registry.npmjs.org/ --global```
