@@ -8,6 +8,7 @@ To deploy:
 To play:
 
   - input desired width/height (see recommended sizes below)
+    - press enter to submit updated values
   - select desired starting cells
     - example patterns can be found at https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life#Examples_of_patterns
   - press Start button
