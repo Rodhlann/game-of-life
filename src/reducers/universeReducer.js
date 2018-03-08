@@ -11,6 +11,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_UNIVERSE_CELLS:
     case actionTypes.TOGGLE_STATUS:
+    case actionTypes.UPDATE_ALL_STATUSES:
       return { ...state, universeCellStatuses: action.universeCellStatuses };
     case actionTypes.TOGGLE_ACTIVE:
       return { ...state, universeActive: action.universeActive };

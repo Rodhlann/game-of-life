@@ -86,7 +86,6 @@ class Universe extends React.Component {
   }
 
   calculateNeighbors(cellStatuses, rowIndex, cellIndex) {
-    let actions = this.props.actions;
     let neighbors = 0;
     if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // NW
       neighbors += 1;
@@ -116,21 +115,23 @@ class Universe extends React.Component {
   */
   calculateStatuses() {
     const cellStatuses = this.props.universeData.universeCellStatuses;
+    const tmpCellStatuses =
+    [...Array(this.props.universeData.height).fill(false)].map(() => Array(this.props.universeData.width).fill(false));
     cellStatuses.forEach((row, rowIndex) => {
       row.forEach((status, cellIndex) => {
         const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
-
         switch (true) {
           case (status && neighbors < 2):
           case (status && neighbors > 3):
           case (!status && neighbors === 3):
-            this.props.actions.toggleStatus(rowIndex, cellIndex, cellStatuses);
+            tmpCellStatuses[rowIndex][cellIndex] = !cellStatuses[rowIndex][cellIndex];
             break;
           default:
-          // live
+            tmpCellStatuses[rowIndex][cellIndex] = !!cellStatuses[rowIndex][cellIndex];
         }
       });
     });
+    this.props.actions.updateAllStatuses(tmpCellStatuses);
   }
 
   gameOfLife() {
@@ -139,7 +140,7 @@ class Universe extends React.Component {
         this.calculateStatuses();
         this.gameOfLife();
       }
-    }, 500);
+    }, 300);
   }
 
   render() {

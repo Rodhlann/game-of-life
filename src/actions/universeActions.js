@@ -22,16 +22,11 @@ export function toggleActive(toggle) {
   };
 }
 
-// TEST CODE
-// export function toggleAllStatuses(universeCellStatuses) {
-//   const tmpArray = universeCellStatuses;
-//   for (let i = 0; i < tmpArray.length; i += 1) {
-//     tmpArray[i] = !universeCellStatuses[i];
-//   }
-//   return (dispatch) => {
-//     dispatch({ type: actionTypes.TOGGLE_STATUS, universeCellStatuses: tmpArray });
-//   };
-// }
+export function updateAllStatuses(universeCellStatuses) {
+  return (dispatch) => {
+    dispatch({ type: actionTypes.UPDATE_ALL_STATUSES, universeCellStatuses });
+  };
+}
 
 export function toggleStatus(rowIndex, cellIndex, universeCellStatuses) {
   const tmpArray = universeCellStatuses;
