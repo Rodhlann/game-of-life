@@ -7,6 +7,11 @@ const initialState = {
   universeActive: false,
 };
 
+/**
+  * Update the application global state (store) based on application actions and input
+  * @param {object} state default state of the universe
+  * @param {object} action action performed
+  */
 export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_UNIVERSE_CELLS:
@@ -15,8 +20,6 @@ export default (state = initialState, action) => {
       return { ...state, universeCellStatuses: action.universeCellStatuses };
     case actionTypes.TOGGLE_ACTIVE:
       return { ...state, universeActive: action.universeActive };
-    case actionTypes.DEPLOY_UNIVERSE:
-      return { ...state, width: action.width, height: action.height };
     case actionTypes.UPDATE_WIDTH:
       return { ...state, width: action.width, universeCellStatuses: action.universeCellStatuses };
     case actionTypes.UPDATE_HEIGHT:
@@ -26,6 +29,11 @@ export default (state = initialState, action) => {
   }
 };
 
+/**
+  * Distribute universe data to the desired locations within the application
+  * @param {object} state state of the application
+  * @returns {object} universeReducer data
+  */
 export function getUniverseData(state) {
   return state.universeReducer;
 }

@@ -14,6 +14,9 @@ class UniverseCell extends React.Component {
     backgroundColor: 'white',
   }
 
+  /**
+    * Toggle cell status
+    */
   handleClick() {
     if (!this.props.universeData.universeActive) {
       this.props.actions.toggleStatus(
@@ -24,6 +27,10 @@ class UniverseCell extends React.Component {
     }
   }
 
+  /**
+    * Set cell styles based on cell status
+    * @returns {object} appropriate cell style
+    */
   checkStyles() {
     if (
       this.props.universeData.universeCellStatuses.length &&

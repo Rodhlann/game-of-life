@@ -9,10 +9,18 @@ import { getUniverseData } from '../reducers/universeReducer';
 import '../styles/universe.css';
 
 class Universe extends React.Component {
+  /**
+    * Ensure user input is desired format
+    * @param {?} value user input
+    * @returns {bool} product of tested input
+    */
   static validateInput(value) {
     return /^\d+$/.test(value);
   }
 
+  /**
+    * Perform action after component mounts
+    */
   componentDidMount() {
     this.props.actions.addUniverseCellStatuses(
       this.props.universeData.width,
@@ -20,6 +28,10 @@ class Universe extends React.Component {
     );
   }
 
+  /**
+    * Generates universe rows and columns
+    * @returns universe rows, with columns
+    */
   createUniverseRows() {
     const universeRows = [];
     for (let i = 0; i < this.props.universeData.height; i += 1) {
@@ -28,11 +40,19 @@ class Universe extends React.Component {
     return universeRows;
   }
 
+  /**
+    * Triggered when Start/Stop button is clicked
+    * Activates game and toggles universe on/off
+    */
   handleClick() {
     this.props.actions.toggleActive(!this.props.universeData.universeActive);
     this.gameOfLife();
   }
 
+  /**
+    * Update width based on user input
+    * @param {object} event user input event
+    */
   handleWidthChange(event) {
     if (event.key === 'Enter') {
       const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.width;
@@ -43,6 +63,10 @@ class Universe extends React.Component {
     }
   }
 
+  /**
+    * Update height based on user input
+    * @param {object} event user input event
+    */
   handleHeightChange(event) {
     if (event.key === 'Enter') {
       const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.height;
@@ -53,6 +77,12 @@ class Universe extends React.Component {
     }
   }
 
+  /**
+    * Checks if row index passes bottom of universe during neightbor
+    * check and wraps back to top
+    * @param {number} rowIndex y index of specific cell in the universe
+    * @returns {number} appropriate rowIndex (wrapped to top if necessary)
+    */
   wrapToTopChecker(rowIndex) {
     let tmpRowIndex = rowIndex + 1;
     if (tmpRowIndex > (this.props.universeData.height - 1)) {
@@ -61,6 +91,12 @@ class Universe extends React.Component {
     return tmpRowIndex;
   }
 
+  /**
+    * Checks if row index passes top of universe during neightbor
+    * check and wraps back to bottom
+    * @param {number} rowIndex y index of specific cell in the universe
+    * @returns {number} appropriate rowIndex (wrapped to bottom if necessary)
+    */
   wrapToBottomChecker(rowIndex) {
     let tmpRowIndex = rowIndex - 1;
     if (tmpRowIndex < 0) {
@@ -69,6 +105,12 @@ class Universe extends React.Component {
     return tmpRowIndex;
   }
 
+  /**
+    * Checks if cell index passes right of universe during neightbor
+    * check and wraps back to left
+    * @param {number} cellIndex x index of specific cell in the universe
+    * @returns {number} appropriate cellIndex (wrapped to left if necessary)
+    */
   wrapToLeftChecker(cellIndex) {
     let tmpCellIndex = cellIndex + 1;
     if (tmpCellIndex > (this.props.universeData.width - 1)) {
@@ -77,6 +119,12 @@ class Universe extends React.Component {
     return tmpCellIndex;
   }
 
+  /**
+    * Checks if cell index passes left of universe during neightbor
+    * check and wraps back to right
+    * @param {number} cellIndex x index of specific cell in the universe
+    * @returns {number} appropriate cellIndex (wrapped to right if necessary)
+    */
   wrapToRightChecker(cellIndex) {
     let tmpCellIndex = cellIndex - 1;
     if (tmpCellIndex < 0) {
@@ -85,6 +133,13 @@ class Universe extends React.Component {
     return tmpCellIndex;
   }
 
+  /**
+    * Checks 8 neighbors of individual cell
+    * @param {array} cellStatuses 2D array representing state of universe
+    * @param {number} rowIndex y index of specific cell in the universe
+    * @param {number} cellIndex x index of specific cell in the universe
+    * @returns {number} number of active neighbors
+    */
   calculateNeighbors(cellStatuses, rowIndex, cellIndex) {
     let neighbors = 0;
     if (cellStatuses[this.wrapToBottomChecker(rowIndex)][this.wrapToRightChecker(cellIndex)]) { // NW
@@ -107,16 +162,17 @@ class Universe extends React.Component {
     return neighbors;
   }
 
-  /*
-    Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
-    Any live cell with two or three live neighbours lives on to the next generation.
-    Any live cell with more than three live neighbours dies, as if by overpopulation.
-    Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-  */
+  /**
+    * Checks all cells based on these rules and updates all statuses simultaniously
+    *   - Any live cell with fewer than two live neighbours dies, as if caused by underpopulation.
+    *   - Any live cell with two or three live neighbours lives on to the next generation.
+    *   - Any live cell with more than three live neighbours dies, as if by overpopulation.
+    *   - Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+    */
   calculateStatuses() {
     const cellStatuses = this.props.universeData.universeCellStatuses;
-    const tmpCellStatuses =
-    [...Array(this.props.universeData.height).fill(false)].map(() => Array(this.props.universeData.width).fill(false));
+    const tmpCellStatuses = [...Array(this.props.universeData.height).fill(false)]
+      .map(() => Array(this.props.universeData.width).fill(false));
     cellStatuses.forEach((row, rowIndex) => {
       row.forEach((status, cellIndex) => {
         const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
@@ -134,6 +190,9 @@ class Universe extends React.Component {
     this.props.actions.updateAllStatuses(tmpCellStatuses);
   }
 
+  /**
+    * Game loop. Triggers when universe is active
+    */
   gameOfLife() {
     setTimeout(() => {
       if (this.props.universeData.universeActive) {

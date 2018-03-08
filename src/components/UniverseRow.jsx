@@ -8,6 +8,10 @@ import { getUniverseData } from '../reducers/universeReducer';
 import UniverseCell from '../components/UniverseCell';
 
 class UniverseRow extends React.Component {
+  /**
+    * Creates universe cells
+    * @returns {array} all universe cells for the given row
+    */
   createUniverseCells() {
     const universeCells = [];
     for (let i = 0; i < this.props.universeData.width; i += 1) {
