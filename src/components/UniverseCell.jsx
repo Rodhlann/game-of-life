@@ -43,11 +43,26 @@ class UniverseCell extends React.Component {
     return this.deadStyle;
   }
 
+  /**
+    * Dynamically update grid size based on height and width values
+    * @returns {number} the computed size of the grid
+    */
+  computedGridSize() {
+    const baseDimension = 34;
+    const width = (window.innerWidth / this.props.universeData.width);
+    const height = ((window.innerHeight - 50) / this.props.universeData.height);
+    const computatedWidthDimension = width > baseDimension ? baseDimension : width;
+    const computatedHeightDimension = height > baseDimension ? baseDimension : height;
+    return Math.min(computatedWidthDimension, computatedHeightDimension);
+  }
+
   render() {
+    const computedGridSize = this.computedGridSize();
+
     return (
       <button
         className="universe-cell"
-        style={this.checkStyles()}
+        style={Object.assign(this.checkStyles(), { height: computedGridSize, width: computedGridSize })}
         onClick={() => this.handleClick()}
       />
     );

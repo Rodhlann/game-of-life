@@ -1,8 +1,8 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-  height: 3,
-  width: 3,
+  height: 5,
+  width: 5,
   universeCellStatuses: [],
   universeActive: false,
 };

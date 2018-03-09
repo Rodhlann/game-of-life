@@ -1,4 +1,4 @@
-## Game of Life Code Challege -- v1.0
+## Game of Life Code Challege -- v1.1
 
 ### Dependencies: 
 
@@ -27,7 +27,7 @@
     - ```npm config set registry http://registry.npmjs.org/ --global```
   - recommended universe height/width: 
     - smallest: 5x5
-    - largest : 50x50 (you will notice a performance drop at this size, but it still works!)
+    - largest recommended: 100x100 (you will notice a performance drop at this size, but it still works!)
 
 ### How it works:
 
@@ -56,3 +56,8 @@ bottom right, bottom, bottom left, and left positions in relation to the current
 2. Any live cell with two or three live neighbours lives on to the next generation.
 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+
+### Newest updates
+
+1. Dynamically update CSS to stay within view, based on window size
+2. Update base dimensions of the universe
