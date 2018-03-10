@@ -4,6 +4,7 @@ const initialState = {
   height: 5,
   width: 5,
   universeCellStatuses: [],
+  affectedCellStatuses: [],
   universeActive: false,
   baseDimension: 34, // APPLICATION PROP -- DO NOT UPDATE DYNAMICALLY
   universeDimension: 34,
@@ -17,15 +18,32 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.ADD_UNIVERSE_CELLS:
+      return {
+        ...state,
+        universeCellStatuses: action.universeCellStatuses,
+        affectedCellStatuses: action.affectedCellStatuses,
+      };
     case actionTypes.TOGGLE_STATUS:
     case actionTypes.UPDATE_ALL_STATUSES:
       return { ...state, universeCellStatuses: action.universeCellStatuses };
+    case actionTypes.UPDATE_AFFECTED_CELLS:
+      return { ...state, affectedCellStatuses: action.newlyAffectedCells };
     case actionTypes.TOGGLE_ACTIVE:
       return { ...state, universeActive: action.universeActive };
     case actionTypes.UPDATE_WIDTH:
-      return { ...state, width: action.width, universeCellStatuses: action.universeCellStatuses };
+      return {
+        ...state,
+        width: action.width,
+        universeCellStatuses: action.universeCellStatuses,
+        affectedCellStatuses: action.affectedCellStatuses,
+      };
     case actionTypes.UPDATE_HEIGHT:
-      return { ...state, height: action.height, universeCellStatuses: action.universeCellStatuses };
+      return {
+        ...state,
+        height: action.height,
+        universeCellStatuses: action.universeCellStatuses,
+        affectedCellStatuses: action.affectedCellStatuses,
+      };
     case actionTypes.UPDATE_UNIVERSE_DIMENSIONS:
       return { ...state, universeDimension: action.universeDimension };
     default:

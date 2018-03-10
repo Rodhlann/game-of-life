@@ -192,25 +192,56 @@ class Universe extends React.Component {
     *   - Any live cell with more than three live neighbours dies, as if by overpopulation.
     *   - Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
     */
+
   calculateStatuses() {
     const cellStatuses = this.props.universeData.universeCellStatuses;
+    const previouslyAffectedCells = this.props.universeData.affectedCellStatuses;
     const tmpCellStatuses = [...Array(this.props.universeData.height).fill(false)]
       .map(() => Array(this.props.universeData.width).fill(false));
+    const newlyAffectedCells = [...Array(this.props.universeData.height).fill(false)]
+      .map(() => Array(this.props.universeData.width).fill(false));
+
+    const canCheckAffectedCells = !!previouslyAffectedCells
+      .map(affectedRow => affectedRow
+        .filter(cell => cell).length > 0)
+      .filter(result => result).length;
+
     cellStatuses.forEach((row, rowIndex) => {
       row.forEach((status, cellIndex) => {
-        const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
-        switch (true) {
-          case (status && neighbors < 2):
-          case (status && neighbors > 3):
-          case (!status && neighbors === 3):
-            tmpCellStatuses[rowIndex][cellIndex] = !cellStatuses[rowIndex][cellIndex];
-            break;
-          default:
-            tmpCellStatuses[rowIndex][cellIndex] = !!cellStatuses[rowIndex][cellIndex];
+        if (!canCheckAffectedCells || previouslyAffectedCells[rowIndex][cellIndex]) {
+          const neighbors = this.calculateNeighbors(cellStatuses, rowIndex, cellIndex);
+          newlyAffectedCells[rowIndex][cellIndex] = !!neighbors;
+          switch (true) {
+            case (status && neighbors < 2):
+            case (status && neighbors > 3):
+            case (!status && neighbors === 3):
+              tmpCellStatuses[rowIndex][cellIndex] = !cellStatuses[rowIndex][cellIndex];
+              break;
+            default:
+              tmpCellStatuses[rowIndex][cellIndex] = !!cellStatuses[rowIndex][cellIndex];
+          }
         }
       });
     });
+    const trulyNewlyNewNew = [...Array(this.props.universeData.height).fill(false)]
+      .map(() => Array(this.props.universeData.width).fill(false));
+    newlyAffectedCells
+      .map((affectedRow, y) => affectedRow
+        .map((cell, x) => {
+          if (cell) {
+            trulyNewlyNewNew[y][x] = true;
+            trulyNewlyNewNew[this.wrapToBottomChecker(y)][this.wrapToRightChecker(x)] = true;
+            trulyNewlyNewNew[this.wrapToBottomChecker(y)][x] = true;
+            trulyNewlyNewNew[this.wrapToBottomChecker(y)][this.wrapToLeftChecker(x)] = true;
+            trulyNewlyNewNew[y][this.wrapToLeftChecker(x)] = true;
+            trulyNewlyNewNew[this.wrapToTopChecker(y)][this.wrapToLeftChecker(x)] = true;
+            trulyNewlyNewNew[this.wrapToTopChecker(y)][x] = true;
+            trulyNewlyNewNew[this.wrapToTopChecker(y)][this.wrapToRightChecker(x)] = true;
+            trulyNewlyNewNew[y][this.wrapToRightChecker(x)] = true;
+          }
+        }));
     this.props.actions.updateAllStatuses(tmpCellStatuses);
+    this.props.actions.updateAffectedCells(trulyNewlyNewNew);
   }
 
   /**

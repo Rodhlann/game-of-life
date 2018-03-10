@@ -61,3 +61,9 @@ bottom right, bottom, bottom left, and left positions in relation to the current
 
 1. Dynamically update Universe grid styles to stay within view, based on window size
 2. Update base dimensions of the Universe
+
+### Goals: 
+
+1. Improve performance on large grids
+2. Drag to select cells https://github.com/Rodhlann/react-drag-select
+2. Create rotating 3D cube of grid https://davidwalsh.name/css-cube

@@ -21,6 +21,16 @@ export function updateAllStatuses(universeCellStatuses) {
 }
 
 /**
+  * Batch update all affected cells
+  * @param {array} newlyAffectedCells 2D array representing the state of all affected cells in the universe
+  */
+export function updateAffectedCells(newlyAffectedCells) {
+  return (dispatch) => {
+    dispatch({ type: actionTypes.UPDATE_AFFECTED_CELLS, newlyAffectedCells });
+  };
+}
+
+/**
   * Toggle the state of a cell
   * @param {number} rowIndex y index of the universe
   * @param {number} cellIndex x index of the universe
@@ -45,6 +55,7 @@ export function updateUniverseWidth(width, height) {
       type: actionTypes.UPDATE_WIDTH,
       width,
       universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
+      affectedCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
@@ -60,6 +71,7 @@ export function updateUniverseHeight(width, height) {
       type: actionTypes.UPDATE_HEIGHT,
       height,
       universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
+      affectedCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
@@ -74,6 +86,7 @@ export function addUniverseCellStatuses(width, height) {
     dispatch({
       type: actionTypes.ADD_UNIVERSE_CELLS,
       universeCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
+      affectedCellStatuses: [...Array(height).fill(false)].map(() => Array(width).fill(false)),
     });
   };
 }
