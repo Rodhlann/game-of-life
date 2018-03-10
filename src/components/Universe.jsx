@@ -26,6 +26,19 @@ class Universe extends React.Component {
       this.props.universeData.width,
       this.props.universeData.height,
     );
+    window.addEventListener('resize', () => this.props.actions.computeGridSize(
+      this.props.universeData.baseDimension,
+      this.props.universeData.width,
+      this.props.universeData.height,
+    ));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', () => this.props.actions.computeGridSize(
+      this.props.universeData.baseDimension,
+      this.props.universeData.width,
+      this.props.universeData.height,
+    ));
   }
 
   /**
@@ -60,6 +73,11 @@ class Universe extends React.Component {
         Number(value),
         this.props.universeData.height,
       );
+      this.props.actions.computeGridSize(
+        this.props.universeData.baseDimension,
+        Number(value),
+        this.props.universeData.height,
+      );
     }
   }
 
@@ -71,6 +89,11 @@ class Universe extends React.Component {
     if (event.key === 'Enter') {
       const value = Universe.validateInput(event.target.value) ? event.target.value : this.props.universeData.height;
       this.props.actions.updateUniverseHeight(
+        this.props.universeData.width,
+        Number(value),
+      );
+      this.props.actions.computeGridSize(
+        this.props.universeData.baseDimension,
         this.props.universeData.width,
         Number(value),
       );

@@ -5,6 +5,8 @@ const initialState = {
   width: 5,
   universeCellStatuses: [],
   universeActive: false,
+  baseDimension: 34, // APPLICATION PROP -- DO NOT UPDATE DYNAMICALLY
+  universeDimension: 34,
 };
 
 /**
@@ -24,6 +26,8 @@ export default (state = initialState, action) => {
       return { ...state, width: action.width, universeCellStatuses: action.universeCellStatuses };
     case actionTypes.UPDATE_HEIGHT:
       return { ...state, height: action.height, universeCellStatuses: action.universeCellStatuses };
+    case actionTypes.UPDATE_UNIVERSE_DIMENSIONS:
+      return { ...state, universeDimension: action.universeDimension };
     default:
       return state;
   }

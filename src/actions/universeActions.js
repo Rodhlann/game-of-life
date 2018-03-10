@@ -77,3 +77,20 @@ export function addUniverseCellStatuses(width, height) {
     });
   };
 }
+
+/**
+  * Dynamically update Universe grid size based on height and width values
+  * @returns {number} the computed size of the grid
+  */
+export function computeGridSize(baseDimension, universeWidth, universeHeight) {
+  const width = (window.innerWidth / universeWidth);
+  const height = ((window.innerHeight - 50) / universeHeight);
+  const computatedWidthDimension = width > baseDimension ? baseDimension : width;
+  const computatedHeightDimension = height > baseDimension ? baseDimension : height;
+  return (dispatch) => {
+    dispatch({
+      type: actionTypes.UPDATE_UNIVERSE_DIMENSIONS,
+      universeDimension: Math.min(computatedWidthDimension, computatedHeightDimension),
+    });
+  };
+}
