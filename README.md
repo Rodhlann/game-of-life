@@ -57,7 +57,7 @@ bottom right, bottom, bottom left, and left positions in relation to the current
 3. Any live cell with more than three live neighbours dies, as if by overpopulation.
 4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
-### Newest updates
+### Newest updates:
 
-1. Dynamically update CSS to stay within view, based on window size
-2. Update base dimensions of the universe
+1. Dynamically update Universe grid styles to stay within view, based on window size
+2. Update base dimensions of the Universe
